@@ -36,7 +36,35 @@ Introducing Backbone
 BACKBONE
 ========
 
- 
+Backbone is een Javascript applicatieframework; geen MVC, maar volgens velen eerder een MVP framework. Er zijn geen controllers maar routers.
+
+iig. In Backbone heb je een aantal basisconcepten:
+
+ * Models
+ * Collections (extends Model)
+ * Views
+ * Controllers
+
+ Models en collections zijn in essentie datacontainers; get/set methodes, synchronisatiemogelijkheden, default waarden, datavalidatie, events, etc.
+
+ Collections zijn essentieel containers voor models; voegt logica toe om een lijst van models op te halen, en heeft collection-functies van Underscore 'ingemixed' (mixin), zoals find, filter, etc.
+
+ Views zijn wrappers om de presentatie heen; je kunt ze programmeren om HTML te renderen wanneer er iets verandert aan een model (event binding), en declaratief events toe te voegen aan hetgeen ze renderen (onclick etc).
+
+ Controllers zijn hetgeen dat alles aan elkaar koppelt; je declareert 'clienside' routes (#/post/1) waarbij callbacks uitgevoerd worden indien die routes aangeroepen worden.
+
+ Typisch gebruik van een Backbone applicatie: bij een route (#/posts) wordt een Collection aangemaakt (var posts = new Posts()), en een view (var postsView = new PostsView(posts)). De view geeft aan dat hij luistert naar een event binnen de collection. Vervolgens wordt er met de storage (server of wat dan ook, bv localstorage) gesynced dmv posts.fetch(); async request wordt afgevuurd, en wanneer data binnen komt wordt de postsView gerendered.
+
+ TODO: bovenstaand vertalen naar code / door een voorbeeldapplicatie lopen.
+
 
 EXTRA
 =====
+
+ * Template libraries
+ * Verdere structurering / modularisatie dmv Require.js
+  * Requirejs + Handlebars/hbs + r.js optimizer = single page webapplicatie in drie bestanden: html (minimaal), css, js
+ * (diepgaand / offtopic?) Server-side rendering voor 'first hit', search engines met bv node.js
+ * unit tests met jasmine
+ * functionele tests met fitnesse / selenium / hipper iets
+ * Client web application build tools (yeoman & co, nooit echt ingedoken)
