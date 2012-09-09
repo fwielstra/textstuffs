@@ -1,0 +1,42 @@
+INTRO
+=====
+
+ * Klassieke website: database -> server applicatie -> client (browser)
+ * Mettertijd: database -> server applicatie -> clients; RSS, browser, mobiel
+ * Beter: database -> API -> server applicatie (html), alternatieve clients (mobiel)
+ * Nieuw: database -> API -> client.
+
+ dwz: de server heeft alleen een API; de browserapplicatie is slechts één client van velen.
+
+ Voordelen:
+  * Schaalbaarheid door eenvoud
+  * Rapid application development
+  * Snelle expansie (dwz: toevoegen van een client kan snel) (browser, mobiel, public API)
+  * (optioneel indien toegestaan: voorbeeld NS aanhalen; applicatie bouwen op bestaande API binnen zes weken, prototype binnen een dag)
+
+Brug naar backbone: presentatie richt zich op de browser als client, als volledig zelfstandige applicatie die een API als datasource gebruikt.
+Dit kan natuurlijk in 'vanilla' Javascript of, ivm browserverschillen, met JQuery.
+Echter: het structureren van een applicatie aan de clientside is tot recent niet heel veel aandacht aan besteed.
+jQuery code heeft de neiging om er als volgt uit te zien:
+
+ $.get('http://site.com/api/posts', function(posts) {
+ 	$.each(posts, function(post) {
+ 		$('#posts').append('<li>' + post + '</li>');
+ 	});
+ });
+
+Wat is hier mis mee? Model, view en controller allen in één. In 2005 kwam Ruby on Rails en werd het MVC paradigma behoorlijk snel een 'de factor' standaard voor het structureren van server-side applicaties, ook voor het grote publiek; deze gedachtengang ging echter niet over naar de front-end, voornamelijk omdat front-end code voornamelijk relatief kleine snippets waren; dropdown-effect hier, AJAX content verversen daar, etc.
+
+Maar dat kan niet meer; gemiddelde website heeft duizenden regels JS die van alles doen en, als website een 'first-class' consumer van een API wordt, neemt deze code alleen maar toe.
+
+Dus is er structuur nodig om een single-page webapplicatie te schrijven zonder om te komen in een gebrek aan structuur.
+
+Introducing Backbone
+
+BACKBONE
+========
+
+ 
+
+EXTRA
+=====
