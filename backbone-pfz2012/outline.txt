@@ -3,59 +3,166 @@ INTRO
 
  * Klassieke website: database -> server applicatie -> client (browser)
  * Mettertijd: database -> server applicatie -> clients; RSS, browser, mobiel
- * Beter: database -> API -> server applicatie (html), alternatieve clients (mobiel)
- * Nieuw: database -> API -> client.
+ * Beter: database -> API -> server applicatie (html), alternatieve clients (mobiel), 3rd party
+ * Nieuw: database -> API -> (web) client.
+   * Geen server-side UI
 
  dwz: de server heeft alleen een API; de browserapplicatie is slechts één client van velen.
 
  Voordelen:
+  * Eenvoudiger
+    * Beheersbare entrypoints
   * Schaalbaarheid door eenvoud
   * Rapid application development
-  * Snelle expansie (dwz: toevoegen van een client kan snel) (browser, mobiel, public API)
-  * (optioneel indien toegestaan: voorbeeld NS aanhalen; applicatie bouwen op bestaande API binnen zes weken, prototype binnen een dag)
+  * Client-onafhankelijk
 
 Brug naar backbone: presentatie richt zich op de browser als client, als volledig zelfstandige applicatie die een API als datasource gebruikt.
 Dit kan natuurlijk in 'vanilla' Javascript of, ivm browserverschillen, met JQuery.
-Echter: het structureren van een applicatie aan de clientside is tot recent niet heel veel aandacht aan besteed.
-jQuery code heeft de neiging om er als volgt uit te zien:
-
- $.get('http://site.com/api/posts', function(posts) {
- 	$.each(posts, function(post) {
- 		$('#posts').append('<li>' + post + '</li>');
- 	});
- });
-
-Wat is hier mis mee? Model, view en controller allen in één. In 2005 kwam Ruby on Rails en werd het MVC paradigma behoorlijk snel een 'de factor' standaard voor het structureren van server-side applicaties, ook voor het grote publiek; deze gedachtengang ging echter niet over naar de front-end, voornamelijk omdat front-end code voornamelijk relatief kleine snippets waren; dropdown-effect hier, AJAX content verversen daar, etc.
-
-Maar dat kan niet meer; gemiddelde website heeft duizenden regels JS die van alles doen en, als website een 'first-class' consumer van een API wordt, neemt deze code alleen maar toe.
-
-Dus is er structuur nodig om een single-page webapplicatie te schrijven zonder om te komen in een gebrek aan structuur.
+Javascript of jQuery zijn echter libraries; ze dwingen van zichzelf weinig tot geen structuur af. Wat je nodig hebt is een applicatieframework; je wilt je applicatie op kunnen delen in componenten, structuur.
 
 Introducing Backbone
 
 BACKBONE
 ========
 
-Backbone is een Javascript applicatieframework; geen MVC, maar volgens velen eerder een MVP framework. Er zijn geen controllers maar routers.
+Backbone is een Javascript applicatieframework waarin je je client-applicatie kunt structureren.
+Het is gebouwd bovenop jQuery/Zepto voor ajax & DOM manipulatie, en de Underscore.js toolkit library.
 
-iig. In Backbone heb je een aantal basisconcepten:
+ Om te beginnen: je pagina renderen door een View. In Backbone definieer je een View als volgt:
 
- * Models
- * Collections (extends Model)
- * Views
- * Controllers
+var MyView = Backbone.view.extend({
+	tagName: "strong",
+
+	id: "hello-world",
+
+	render: function() {
+		this.$el.text("Hello world!");
+	}
+});
+
+var main = new MyView();
+main.render();
+$("body").html(main.el);
+
+Models
+------
 
  Models en collections zijn in essentie datacontainers; get/set methodes, synchronisatiemogelijkheden, default waarden, datavalidatie, events, etc.
 
- Collections zijn essentieel containers voor models; voegt logica toe om een lijst van models op te halen, en heeft collection-functies van Underscore 'ingemixed' (mixin), zoals find, filter, etc.
+
+ * Als back-end van een model wordt standaard uitgegaan van een REST-ful webservice; GETs om op te halen, POSTS om op te slaan, PUTs om bij te werken, en DELETEs om te verwijderen.
+ * Dit is echter relatief eenvoudig te vervangen door bijvoorbeeld LocalStorage, SOAP, of wat dan ook door de Backbone.sync methode te implementeren / overschrijven.
+
+Model:
+
+var MyModel = Backbone.model.extend({
+	
+});
+
+meer nie.
+
+var thing = new MyModel({message: "Hello world"});
+
+var MyView = Backbone.view.extend({
+	render: function() {
+		this.$el.text(this.model.get("message"));
+	}
+});
+
+var view = new MyView({model: thing});
+view.render();
+
+
+ -- event binding
+
+
+var MyView = Backbone.view.extend({
+	initialize: function() {
+	  this.model.on("change", this.render);
+	},
+
+	render: function() {
+	  this.$el.text(this.model.get("message"));
+	}
+});
+
+var model = new MyModel();
+var view = new MyView({model: model});
+model.set("message", "Hello world!");
+
+ * indien een veld van het model wijzigt word render() aangeroepen
+ * geen expliciete aanroep naar render() - minder handwerk, minder code, minder koppeling
+
+
+
+ -- Collections & Fetch()
+
+ Collections zijn eigenlijk containers voor models; voegt logica toe om een lijst van models op te halen, en heeft collection-functies van Underscore 'ingemixed' (mixin), zoals find, filter, etc.
+
+
+Backbone.view.extend({
+  intitialize: function() {
+    this.model.on("reset", this.render);
+  }
+
+	render: function() {
+		this.model.each(function(todo) {
+      this.$el.append(todo.get("message"));
+		});
+	}
+});
+
+ var Collection = Backbone.Collection.extend({
+    model: MyModel,
+ 	url: "api/todos"
+ });
+
+ var todos = new Collection();
+ var view = new MyView({model: todos});
+ todos.fetch();
+
+ * vuurt een request af (async)
+ * model rendert als dat request afgerond & verwerkt is
+ * View zal zichzelf ook opnieuw renderen als de data bijgewerkt wordt (door een 2e fetch, of bijv. door updates gepushed via websockets)
 
  Views zijn wrappers om de presentatie heen; je kunt ze programmeren om HTML te renderen wanneer er iets verandert aan een model (event binding), en declaratief events toe te voegen aan hetgeen ze renderen (onclick etc).
 
- Controllers zijn hetgeen dat alles aan elkaar koppelt; je declareert 'clienside' routes (#/post/1) waarbij callbacks uitgevoerd worden indien die routes aangeroepen worden.
+ -- Routers
 
- Typisch gebruik van een Backbone applicatie: bij een route (#/posts) wordt een Collection aangemaakt (var posts = new Posts()), en een view (var postsView = new PostsView(posts)). De view geeft aan dat hij luistert naar een event binnen de collection. Vervolgens wordt er met de storage (server of wat dan ook, bv localstorage) gesynced dmv posts.fetch(); async request wordt afgevuurd, en wanneer data binnen komt wordt de postsView gerendered.
+ Routers zijn de componenten die structuur aan de front-end geven in de vorm van URLs. Backbone URLs zijn standaard geencodeerd in het Anchor-gedeelte van een url (bijvoorbeeld: http://site.com/index.html#todos/1), maar met de History API van HTML5 kun je ook 'native' URLs gebruiken: http://site.com/todos/1
 
- TODO: bovenstaand vertalen naar code / door een voorbeeldapplicatie lopen.
+ // vb 1: router met enkele router
+ var Router = Backbone.Router.extend({
+  routes: {
+    "todos" : "listTodos"
+  },
+
+  listTodos: function() {
+    var todos = new Collection();
+    var view = new MyView({model: todos});
+    $("body").html(view.el);
+    todos.fetch();
+  }
+ });
+
+ // vb 2: route met parameters
+  var Router = Backbone.Router.extend({
+  routes: {
+    "todos" : "listTodos",
+    "todo/:id" : "showTodo"
+  },
+
+  listTodos: function() { /* ... */ },
+
+  showTodo: function(id) {
+    var singleTodo = new Todo({id: id});
+    var todoView = new TodoView({model: singleTodo});
+    singleTodo.fetch();
+  }
+ });
+
+// CUTOFF 1: demo applicatie!1one
+
 
 
 EXTRA
