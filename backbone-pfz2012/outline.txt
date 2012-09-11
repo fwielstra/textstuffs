@@ -30,13 +30,11 @@ Het is gebouwd bovenop jQuery/Zepto voor ajax & DOM manipulatie, en de Underscor
 
  Om te beginnen: je pagina renderen door een View. In Backbone definieer je een View als volgt:
 
-var MyView = Backbone.view.extend({
-	tagName: "strong",
-
-	id: "hello-world",
+var TodoView = Backbone.view.extend({
+	tagName: "li",
 
 	render: function() {
-		this.$el.text("Hello world!");
+		this.$el.text("Talk to corporate"); // like a boss
 	}
 });
 
@@ -55,40 +53,51 @@ Models
 
 Model:
 
-var MyModel = Backbone.model.extend({
+var TodoItem = Backbone.model.extend({
 	
 });
 
-meer nie.
+var promoteSynergy = new TodoItem({
+  description: "Promote Syngergy" // like a boss
+});
 
-var thing = new MyModel({message: "Hello world"});
+console.log(promoteSynergy.get("description"));
+promoteSynergy.set("description", "Approve memos")
+promoteSynergy.set({
+  description : "Talk to corporate",
+  priority: 1,
+  done: true
+});
 
-var MyView = Backbone.view.extend({
+var TodoItemView = Backbone.view.extend({
 	render: function() {
-		this.$el.text(this.model.get("message"));
+		this.$el.text(this.model.get("description"));
 	}
 });
 
-var view = new MyView({model: thing});
+var view = new TodoItemView({
+  model: doLaundry
+});
+
 view.render();
 
 
  -- event binding
 
 
-var MyView = Backbone.view.extend({
+var TodoItemView = Backbone.view.extend({
 	initialize: function() {
 	  this.model.on("change", this.render);
 	},
 
 	render: function() {
-	  this.$el.text(this.model.get("message"));
+	  this.$el.text(this.model.get("description"));
 	}
 });
 
-var model = new MyModel();
-var view = new MyView({model: model});
-model.set("message", "Hello world!");
+var todo = new TodoItem();
+var view = new TodoItemView({model: model});
+todo.set("description", "Direct workflow");
 
  * indien een veld van het model wijzigt word render() aangeroepen
  * geen expliciete aanroep naar render() - minder handwerk, minder code, minder koppeling
@@ -100,25 +109,26 @@ model.set("message", "Hello world!");
  Collections zijn eigenlijk containers voor models; voegt logica toe om een lijst van models op te halen, en heeft collection-functies van Underscore 'ingemixed' (mixin), zoals find, filter, etc.
 
 
-Backbone.view.extend({
+var TodosListView = Backbone.view.extend({
   intitialize: function() {
     this.model.on("reset", this.render);
   }
 
-	render: function() {
-		this.model.each(function(todo) {
+  render: function() {
+    this.model.each(function(todo) {
       this.$el.append(todo.get("message"));
-		});
-	}
+    });
+  }
 });
 
- var Collection = Backbone.Collection.extend({
-    model: MyModel,
- 	url: "api/todos"
+ var Todos = Backbone.Collection.extend({
+  model: Todo,
+  url: "api/todos"
  });
 
- var todos = new Collection();
- var view = new MyView({model: todos});
+ var todos = new Todos();
+ var listView = new TodosListView({model: todos});
+ $("body").html(listView.el);
  todos.fetch();
 
  * vuurt een request af (async)
@@ -138,15 +148,15 @@ Backbone.view.extend({
   },
 
   listTodos: function() {
-    var todos = new Collection();
-    var view = new MyView({model: todos});
+    var todos = new Todos();
+    var view = new TodosView({model: todos});
     $("body").html(view.el);
     todos.fetch();
   }
  });
 
  // vb 2: route met parameters
-  var Router = Backbone.Router.extend({
+var Router = Backbone.Router.extend({
   routes: {
     "todos" : "listTodos",
     "todo/:id" : "showTodo"
@@ -159,24 +169,30 @@ Backbone.view.extend({
     var todoView = new TodoView({model: singleTodo});
     singleTodo.fetch();
   }
- });
+});
 
 // CUTOFF 1: demo applicatie!1one
 
 Bij grotere views wordt de render functie snel groot. Bovendien is html in javascript genereren niet handig voor designers. Gelukkig zijn er ook goede template libraries die we kunnen gebruiken. Underscore biedt een standaard template functie. Mustache.js en varianten zijn veel gebruikt, Haml.js is ook mogelijk.
 
 (misschien nog even tonen)
-Backbone.view.extend({
-  intitialize: function() {
-    ..
-  },
 
-  template: "<ul>{{#todos}}<li>{{message}}</li>{{/todos}}</ul>",
+<script type="text/mustache" id="todo-list">
+  <ul>
+    {{#todos}}
+      <li>{{message}} (like a boss)</li>
+    {{/todos}}
+  </ul>
+</script>
+
+var TodosView = Backbone.View.extend({
+
+  template: $("#todo-list"),
 
   render: function() {
     var data = {todos: this.model.toJSON()};
     var output = Mustache.render(this.template, data);
-    $(this.el).html(output);
+    this.$el.html(output);
   }
 });
 
