@@ -163,6 +163,23 @@ Backbone.view.extend({
 
 // CUTOFF 1: demo applicatie!1one
 
+Bij grotere views wordt de render functie snel groot. Bovendien is html in javascript genereren niet handig voor designers. Gelukkig zijn er ook goede template libraries die we kunnen gebruiken. Underscore biedt een standaard template functie. Mustache.js en varianten zijn veel gebruikt, Haml.js is ook mogelijk.
+
+(misschien nog even tonen)
+Backbone.view.extend({
+  intitialize: function() {
+    ..
+  },
+
+  template: "<ul>{{#todos}}<li>{{message}}</li>{{/todos}}</ul>",
+
+  render: function() {
+    var data = {todos: this.model.toJSON()};
+    var output = Mustache.render(this.template, data);
+    $(this.el).html(output);
+  }
+});
+
 
 
 EXTRA
