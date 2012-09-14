@@ -33,6 +33,52 @@ En events.
 ... Coding
 
 Dit waten dan de views. Nu de volgende stap, we gaan data in onze view zetten. Backbone biedt hiervoor de Model. Deze kun je ook extenden net als de view.
+We maken een Model genaamd Task. In tegenstelling tot de View hoef je bij de Model geen functionaliteit toe te voegen om er iets nuttigs mee te doen. In zijn meest simpele vorm is een Model een datacontainer. De Model heeft geen vaste structuur, je kunt er vanalles in stoppen.
+We maken wat instantaties van onze Task aan, met een property description.
+.. Coding
+Nu moeten we onze view aanpassen om de model instanties te kunnen weergeven. We geven ze als volgt door:
+.. Coding
+En verder moeten we wat doen met de model, Dit gebeurt in de render method
+.. Coding
+
+We laten nu maar een Todo item zien. Als we meerdere willen gebruiken, kunnen we de Collection gebruiken. Een Collection is vergelijkbaar met een Model (extend een model) en bevat, vast verrassend, een lijst.
+.. Coding
+We hebben nu een Tasks collection aangemaakt, waar ieder element weer een Task model is die we eerder hebben gemaakt. De nieuwe class gaan we instantieren
+.. Coding
+en we voegen de nieuwe elementen er aan toe
+... Coding
+Laatste stap is onze view aanpassen, zodat alle tasks worden gerenderd in plaats van alle. We gebruiken de each functie van de Underscore library (dat is leesbaarder dan een for loop) In de render method wordt nu een html list opgebouwd door over de lijst te itereren.
+	Als iemand zich afvraagt of dit er ingewikkeld uitzien: je kunt in de render method ook templating libraries gebruiken. We leggen templating libraries ook uit.
+Volgende stap, we hallen de render method weg. Onze lijst wordt niet meer getoond, maar we gaan het anders doen! We gaan een event handler voor add toevoegen aan de intialize functie. De initialize zou je kunnen vergelijken met een constructor. Dit add event wordt nu niet door de user interface afgevuurd, maar door de model
+... Coding
+Nu als we iets toevoegen wordt, automatisch ons complete view gerenderd. Hier hebben we vooral veel aan in onze volgende stap, data opvragen van de server!
+Alles wat we tot nu hebben gedaan, werkt uitsluitend in de browser. Maar in de meeste webapplicaties zul toch echt data van buiten willen opvragen.
+Freek zal onze lokale Model instanties weggooien. Het resultaat is weer een lege Todo
+.. Coding
+We hebben al een hele eenvoudige REST server, die onze todo elementen als JSON retourneert.
+Als geven aan ons model mee waar de data staat, door het url property in te vullen. 
+.. Coding
+En we passen het event aan, zodat ons view opnieuw gerenderd wordt bij een reset event
+Vervolgens roepen we fetch functie van Backbone aan om de data op te halen.
+... Coding
+De fetch method zal onderwater de data via ajax opvragen, eventuele oude data vervangen, en vervolgens het reset event laten afvuren
+Opslaan van data kan ook.
+Als eerste maken we een Add button, en koppelen het click event aan een nieuwe functie addItem
+... Coding
+De addItem roept de save functie aan, een standaardfunctie van Backbone model die onderwater een Ajax POST uitvoert voor nieuwe data, of een PUT voor data die al bestond. In dit geval wordt een POST afgevuurd.
+
+Zoals je ziet wordt onze render method erg groot. Om onze code wat leesbaarder te maken, kunnen we een templating library gebruiken. Een veelgebruikte templating library is Handlebars.js, welke weer gebaseerd is op Mustache.
+.. Coding (toevoegen via een script src
+Templating libraries maken het mogelijk je html in een template te zetten.
+.. Coding (template uittypen)
+Onze view gaan we nu aanpassen zodat de nieuwe template ook gebruikt wordt.
+.. Coding (template functionaliteit toevoegen aan de View)
+.. Coding (render function aanpassen)
+De render function is nu een stuk leesbaarder geworden, net als de html. De html zou je ook in een apart bestand kunnen zetten 
+
+Dan is het nu tijd voor vragen
+
+
 INTRO
 =====
 
