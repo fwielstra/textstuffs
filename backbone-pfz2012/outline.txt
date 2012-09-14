@@ -1,3 +1,38 @@
+Nieuwe outline
+
+Key note prsentatie voor eerste stukje 'theorie'. TODO plaatje maken
+Daarna livecoding met Chocolat
+Verschillende fases in git via tags als backup
+
+Voor de presentatie
+We hebben drie librariies Zepto Underscore Backbone Even uitleggen wat die libraries zijn.
+Zepto: vergelijkbaar met jquery, alleen selector
+Underscoe: Utility belt
+Backbone: De ruggegraat
+
+We gaan live coden! Het resultaat staat in github, zodat je het later kunt terugzien.
+
+We beginnen met een view
+Een view is een component in backbone om gedrag en de weergave van elkaar te scheiden. Nog wat minder abstract: de html en de javascript voor event handling kunnen zo apart blijven.
+
+Mijn collega freek maakt nu een view aan.
+We gebruiken de extend functie. Extenden van een class in OO talen. Je kunt de bestaande view class uitbreiden met eigen functionaliteit.
+Minimale wat je altijd moet doen: de render functie implmenteren/aanmaken.
+... Coding
+Het property el zoals je nu ziet krijg je automatisch in backbone. Vervolgens gebruiken zepto om het element met onze inhoud te vullen.
+
+Nu gebeurt er nog niks, de render wordt nog niet aangeroepen. Dit kan alsvolgt: Laat eens zien Freek!
+Freek maakt nu een instatie aan. en roept nu de render functie aan. Het element, bestaande uit html, wordt nu gegenereerd. Laatste stap is de gerenderde element in de pagina zetten.
+Mogelijke vragen: $ teken is de syntax van zowel JQuery als Zepto (niet meteen vertellen)
+	Dit lijkt omslachtig, maar als je grote applicaties hebt waar in 5 tot 10 mensen werken, dan is helpt je dit enorm om de applicatie onderhoudbaar te houden. Freek en ik werken in een team 10 mensen. Iedereen programmeert, maar niemand heeft zijn eigen stukje. (denk pas vertellen als iemand het echt vraagt).
+
+Nog wat customazation. De Hello world wordt nu in een div gezet, dat doen backbone. Wat als we een strong element willen? Laat eens zien Freek!
+... Coding
+Classnames toevoegen kan ook...
+En events.
+... Coding
+
+Dit waten dan de views. Nu de volgende stap, we gaan data in onze view zetten. Backbone biedt hiervoor de Model. Deze kun je ook extenden net als de view.
 INTRO
 =====
 
