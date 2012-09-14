@@ -21,7 +21,11 @@
 
     <script>
       
-      var TodoView = Backbone.View.extend({
+      var Task = Backbone.Model.extend({
+        
+      });
+      
+      var TaskView = Backbone.View.extend({
         tagName: "span",
         className: "todo-item",
         
@@ -34,13 +38,25 @@
         },
         
         render: function() {
-          this.$el.html("Create conference talk");
+          this.$el.html(this.model.get("description"));
         }
       });
       
-      var todo = new TodoView();
-      todo.render();
-      $(".container").html(todo.el);
+      var aTask = new Task({
+        description: "Do stuff"
+      });
+
+      var anotherTask = new Task({
+        description: "Do more stuff",
+        priority: 5
+      });
+      
+      var taskView = new TaskView({
+        model: anotherTask
+      });
+
+      taskView.render();
+      $(".container").html(taskView.el);
 
     </script>
   </body>
