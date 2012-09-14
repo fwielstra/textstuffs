@@ -5,6 +5,10 @@ Daarna livecoding met Chocolat
 Verschillende fases in git via tags als backup
 
 Voor de presentatie
+Vroeger: plaatje browser - html-rendering-server - database
+Klik..
+Nu: plaatje browser/android/apple - server - database
+
 We hebben drie librariies Zepto Underscore Backbone Even uitleggen wat die libraries zijn.
 Zepto: vergelijkbaar met jquery, alleen selector
 Underscoe: Utility belt
