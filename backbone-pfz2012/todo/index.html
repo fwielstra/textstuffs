@@ -25,6 +25,10 @@
         
       });
       
+      var Tasks = Backbone.Collection.extend({
+        model: Task
+      });
+      
       var TaskView = Backbone.View.extend({
         tagName: "span",
         className: "todo-item",
@@ -38,7 +42,10 @@
         },
         
         render: function() {
-          this.$el.html(this.model.get("description"));
+          this.model.each(function(task) {
+           this.$el.append(task.get("description") +
+             "<br />");
+          }, this);
         }
       });
       
@@ -51,8 +58,10 @@
         priority: 5
       });
       
+      var tasks = new Tasks([aTask, anotherTask]);
+      
       var taskView = new TaskView({
-        model: anotherTask
+        model: tasks
       });
 
       taskView.render();
