@@ -18,6 +18,18 @@
     <script src="js/zepto.min.js"></script>
     <script src="js/underscore-min.js"></script>
     <script src="js/backbone-min.js"></script>
+    <script src="js/handlebars.js"></script>
+    
+    <script id="taskTemplate" type="text/x-handlebars-template">
+      <ul>
+        {{#each tasks}}
+          <li>
+            {{description}}
+          </li>
+        {{/each}}
+      </ul>
+      <button>Add item</button>
+    </script>
 
     <script>
       
@@ -31,8 +43,10 @@
       });
       
       var TaskView = Backbone.View.extend({
-        tagName: "span",
-        className: "todo-item",
+        tagName: "div",
+        
+        template: Handlebars.compile(
+          $("#taskTemplate").html()),
         
         events: {
           "click button" : "addItem"
@@ -49,12 +63,14 @@
         },
         
         render: function() {
-          this.$el.empty();
-          this.model.each(function(task) {
-            this.$el.append(task.get("description") + "<br />");
-          }, this);
+          var templateData = {
+            tasks: this.model.toJSON()
+          };
           
-          this.$el.append("<button>Add</button>");
+          var renderedTemplate =
+            this.template(templateData);
+          
+          this.$el.html(renderedTemplate);
         }
       });
 
