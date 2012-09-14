@@ -41,7 +41,12 @@
           alert("Click!");
         },
         
+        initialize: function() {
+          this.model.on("add", this.render, this);
+        },
+        
         render: function() {
+          this.$el.empty();
           this.model.each(function(task) {
            this.$el.append(task.get("description") +
              "<br />");
@@ -54,18 +59,18 @@
       });
 
       var anotherTask = new Task({
-        description: "Do more stuff",
-        priority: 5
+        description: "Do more stuff"
       });
-      
+
       var tasks = new Tasks([aTask, anotherTask]);
       
       var taskView = new TaskView({
         model: tasks
       });
 
-      taskView.render();
       $(".container").html(taskView.el);
+      
+      tasks.add(new Task({description:"Conquer world"}));
 
     </script>
   </body>
