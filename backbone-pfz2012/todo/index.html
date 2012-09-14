@@ -19,8 +19,18 @@
     <script src="js/underscore-min.js"></script>
     <script src="js/backbone-min.js"></script>
 
-    <script>      
+    <script>
       
+      var TodoView = Backbone.View.extend({
+        render: function() {
+          this.$el.html("Create conference talk");
+        }
+      });
+      
+      var todo = new TodoView();
+      todo.render();
+      $(".container").html(todo.el);
+
     </script>
   </body>
 </html>
