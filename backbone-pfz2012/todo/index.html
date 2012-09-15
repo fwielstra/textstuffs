@@ -51,19 +51,44 @@
     }
   });
   
-  var tasks = new Tasks([
-    {description : "Talk to corporate"},
-    {description : "Approve memos"},
-    {description : "Lead a workshop"},
-    {description : "Remember birthdays"},
-    {description : "Direct workflow"},
-    {description : "Promote synergy"},
-    {description : "Eat a bagel"}
-  ]);
+  var TasksRouter = Backbone.Router.extend({
+    tasks: new Tasks([
+      {description : "Talk to corporate"},
+      {description : "Approve memos"},
+      {description : "Lead a workshop"},
+      {description : "Remember birthdays"},
+      {description : "Direct workflow"},
+      {description : "Promote synergy"},
+      {description : "Eat a bagel"}
+    ]),
+    
+    routes: {
+      "" : "listTasks",
+      "tasks" : "listTasks",
+      "tasks/:id" : "showTask"
+    },
+    
+    listTasks: function() {
+      var tasksView = new TasksView({
+        model: this.tasks
+      });
+      tasksView.render();
+      $(".container").html(tasksView.el);
+    },
+    
+    showTask: function(taskId) {
+      var taskView = new TaskView({
+        model: this.tasks.at(taskId)
+      });
+      taskView.render();
+      $(".container").html(taskView.el);
+    }
+  });
   
-  var tasksView = new TasksView({model:tasks});
-  tasksView.render();
-  $(".container").html(tasksView.el);
+  var router = new TasksRouter();
+  Backbone.history.start();
+  
+  
       
     </script>
   </body>
