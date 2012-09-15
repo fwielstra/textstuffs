@@ -1,5 +1,9 @@
 [
- {"description" : "Fetch data from server"},
- {"description": "Do other stuff"},
- {"description": "Conquer world"}
+	{"description" : "Talk to corporate"},
+	{"description" : "Approve memos"},
+	{"description" : "Lead a workshop"},
+	{"description" : "Remember birthdays"},
+	{"description" : "Direct workflow"},
+	{"description" : "Promote synergy"},
+	{"description" : "Eat a bagel"}
 ]
